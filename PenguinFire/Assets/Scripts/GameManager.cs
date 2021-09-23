@@ -22,7 +22,6 @@ public class GameManager : MonoBehaviour
     public TMP_InputField fpsInputField;
     private Resolution[] resolutions;
     public AudioMixer audioMixer;
-    public static Dictionary<int, PlayerManager> players = new Dictionary<int, PlayerManager>();
 
     public GameObject localPlayerPrefab;
     public GameObject playerPrefab;
@@ -193,67 +192,10 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("FrameRate", framerate);
     }
 
-    public void SpawnPlayer(int _id, string _username, Vector3 _position, Quaternion _rotation)
-    {
-        GameObject _player;
-        if (_id == Client.instance.myId)
-        {
-            _player = Instantiate(localPlayerPrefab, _position, _rotation);
-        }
-        else
-        {
-            _player = Instantiate(playerPrefab, _position, _rotation);
-        }
-
-        _player.GetComponent<PlayerManager>().Initialize(_id, _username);
-        players.Add(_id, _player.GetComponent<PlayerManager>());
-    }
    
     public void Indicator(string message)
     {
         GameObject indicator = Instantiate(indicatorPrefab, Vector3.zero, Quaternion.identity, GameManager.instance.firemodePrefabManager.transform) as GameObject;
         indicator.GetComponent<TMPro.TextMeshProUGUI>().text = message;
-    }
-
-    public void StartServerConnectionTimer()
-    {
-        StartCoroutine("StartTimer");
-    }
-
-    IEnumerator StartTimer()
-    {
-        Indicator("Connecting To Server...");
-        yield return new WaitForSecondsRealtime(10f);
-        if (!ClientHandle.isConnected)
-        {
-            Indicator("Failed To Connect To Server!");
-            yield return new WaitForSecondsRealtime(2f);
-            Indicator("Reloading Level...");
-            yield return new WaitForSecondsRealtime(2f);
-            FailedToConnect();
-        }
-    }
-
-    void FailedToConnect()
-    {
-        UIManager.instance.startMenu.SetActive(false);
-        UIManager.instance.usernameField.interactable = false;
-        UIManager.instance.ConnectToServer();
-    }
-
-    public void DisconnectFromServer()
-    {
-        Client.DisconnectFromServer();
-        StartCoroutine("Disconnect");
-    }
-
-    IEnumerator Disconnect()
-    {
-        players.Remove(RigidBodyPlayerMovement.instance.gameObject.GetComponent<PlayerManager>().id);
-        Indicator("DisconnectedFromServer!");
-        yield return new WaitForSecondsRealtime(2f);
-        Indicator("Back To Main Menu");
-        yield return new WaitForSecondsRealtime(2f);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

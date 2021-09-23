@@ -87,7 +87,6 @@ public class WeaponHolder : MonoBehaviour
             i++;
         }
         //send the wepon number from the weaponholder class
-        ClientSend.SendSelectedWeaponNumber(selectedWeapon);
     }
 }
 

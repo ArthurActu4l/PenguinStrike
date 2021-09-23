@@ -76,7 +76,6 @@ public class RigidBodyPlayerMovement : MonoBehaviour
         MyInput();
         Look();
         IncreaseBulletSpread();
-        ClientSend.PlayerMovement(transform.position, transform.rotation, playerCam.transform.localRotation);
         playerBody.localScale = Vector3.Lerp(playerBody.localScale, refCrouchScale, 10f * Time.smoothDeltaTime);
         WeaponHolder.instance.transform.localPosition = Vector3.Lerp(WeaponHolder.instance.transform.localPosition, new Vector3(0f, 0.86f, 0f), 10f * Time.smoothDeltaTime);
     }

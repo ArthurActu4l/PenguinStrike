@@ -64,14 +64,9 @@ public class GunScript : MonoBehaviour
     void Update()
     {
         if (GameManager.instance.gameIsPaused) return;
-        SendPositionsAndRotationsToServer();
         CrosshairAndRecoilStuff();
         ReloadingAndShooting();
         ChangeFireMode();
-    }
-    void SendPositionsAndRotationsToServer()
-    {
-        ClientSend.SendGunPositionAndRotation(transform.localPosition, transform.localRotation, transform.GetSiblingIndex(), bone.localRotation);
     }
     void ChangeFireMode()
     {
@@ -153,7 +148,6 @@ public class GunScript : MonoBehaviour
             bullet.GetComponent<Rigidbody>().AddForce(bullet.transform.forward * bulletForce);
 
             //send bulet to server
-            ClientSend.SendBulletHitPoint(hit[i].point, transform.GetSiblingIndex(), bulletForce, hit[i].normal);
 
             bulletScript bulletScript = bullet.GetComponent<bulletScript>();
             bulletScript.decalPosition = hit[i].point;
@@ -170,7 +164,6 @@ public class GunScript : MonoBehaviour
         GameObject shootSound = Instantiate(shootSoundEffect, transform.position, Quaternion.identity, RigidBodyPlayerMovement.instance.transform);
         shootSound.GetComponent<AudioSource>().PlayDelayed(0f);
         CameraShaker.Instance.ShakeOnce(2f, 4f, 0.1f, 0.5f);
-        ClientSend.SendGunSoundEffects(transform.GetSiblingIndex(), 0);
     }
 
     public void SetAmmo()
@@ -199,7 +192,6 @@ public class GunScript : MonoBehaviour
     public void ReloadSoundEffect()
     {
         Instantiate(reloadSoundEffect, transform.position, Quaternion.identity, RigidBodyPlayerMovement.instance.transform);
-        ClientSend.SendGunSoundEffects(transform.GetSiblingIndex(), 1);
     }
 
     public void IsShooting()
